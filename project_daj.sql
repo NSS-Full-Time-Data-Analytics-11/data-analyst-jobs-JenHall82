@@ -1,4 +1,4 @@
---1.How many rows are in the data_analyst_jobs table?SELECT COUNT(*)
+--1.How many rows are in the data_analyst_jobs table?SELECT COUNT(*) 1793
 SELECT COUNT(*)
 FROM data_analyst_jobs;
 
@@ -54,10 +54,10 @@ WHERE location = 'CA';
 
 --9.Find the name of each company and its average star rating for all companies that have more than 5000 reviews across all locations. How many companies are there with more that 5000 reviews across all locations? 40 (41 with null)
 
-SELECT DISTINCT company, AVG(star_rating)AS avg_star_rating, review_count
+SELECT DISTINCT company, AVG(star_rating)AS avg_star_rating
 FROM data_analyst_jobs
-WHERE review_count > 5000
-GROUP BY review_count, company;
+WHERE review_count > 5000 AND company IS NOT NULL
+GROUP BY company;
 
 
 
@@ -92,22 +92,11 @@ WHERE title NOT ILIKE '%Analyst%' AND title NOT ILIKE '%Analytics%';
 --BONUS You want to understand which jobs requiring SQL are hard to fill. Find the number of jobs by industry (domain) that require SQL and have been posted longer than 3 weeks. 
  -- Disregard any postings where the domain is NULL. 
  -- Order your results so that the domain with the greatest number of `hard to fill` jobs is at the top. 
-  -- Which three industries are in the top 4 on this list? Consulting and Business Services 5, Consumer Goods and Services 2, and Computers and Electronics 1. How many jobs have been listed for more than 3 weeks for each of the top 4?
+  -- Which three industries are in the top 4 on this list? Banks and Financial Services 51, Internet and Software 49, and Consulting and Business Services 44. How many jobs have been listed for more than 3 weeks for each of the top 4?
   
 SELECT domain, days_since_posting/7 AS weeks_since_posting, COUNT(title) AS number_of_jobs 
 FROM data_analyst_jobs
-WHERE skill = 'SQL' AND days_since_posting >21 AND domain IS NOT NULL
+WHERE skill ILIKE '%SQL%' AND days_since_posting >21 AND domain IS NOT NULL
 GROUP BY domain, days_since_posting
 ORDER BY number_of_jobs DESC;
 
-SELECT COUNT(domain)
-FROM data_analyst_jobs
-WHERE domain = 'Consulting and Business Services' AND days_since_posting > 21 AND skill = 'SQL';
-
-SELECT COUNT(domain)
-FROM data_analyst_jobs
-WHERE domain = 'Computers and Electronics' AND days_since_posting > 21 AND skill = 'SQL';
-
-SELECT COUNT(domain)
-FROM data_analyst_jobs
-WHERE domain = 'Consumer Goods and Services' AND days_since_posting > 21 AND skill = 'SQL';
